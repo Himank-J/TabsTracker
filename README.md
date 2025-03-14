@@ -1,6 +1,6 @@
-# Tabs Tracker - Browser Extension
+# Tabs Tracker - Browser Extension 🖥️
 
-A powerful browser extension that helps you understand and manage your browsing habits through intuitive visualizations and smart tab management features.
+As a developer I constantly find myself with multiple tabs active which definitely has impact on my device (Chrome tabs are memory killers 🔪). At the same there are momemts when I log on to youtube and then without even knowing just surfing videos one after other. To tackle such obstacles, I have developed **Tab Tracker** - A powerful browser extension that helps you understand and manage your browsing habits through intuitive visualizations and smart tab management features.
 
 ## 🌟 Features
 
@@ -58,10 +58,12 @@ A powerful browser extension that helps you understand and manage your browsing 
 
 ## 🚀 Getting Started
 
-1. Install the extension from the Chrome Web Store
-2. The extension will automatically start tracking your tab usage
-3. Access the dashboard by clicking the extension icon
-4. Configure your preferences in the Settings tab:
+1. ⭐ the repository first.
+2. Download this repo as zip file or clone the repo.
+3. Go to `chrome://extensions/` >> Turn on developer mode >> Load unpacked >> Select the repo directory
+4. The extension will automatically start tracking your tab usage
+5. Access the dashboard by clicking the extension icon
+6. Configure your preferences in the Settings tab:
    - Set up time limits
    - Define productive/social sites
    - Customize tracking preferences
@@ -113,22 +115,6 @@ Contributions are welcome! Feel free to:
 - Report bugs
 - Suggest features
 - Submit pull requests
-
-## 📝 License
-
-MIT License - feel free to use and modify as needed.
-
-## 👥 Contact
-
-For support or queries:
-- Create an issue in the repository
-- Contact: [Your Contact Information]
-
-## 🙏 Acknowledgments
-
-- Chart.js for visualization library
-- Chrome Extension community
-- All contributors and users
 
 ---
 
