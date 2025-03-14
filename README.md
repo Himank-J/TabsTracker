@@ -3,7 +3,7 @@
 As a developer I constantly find myself with multiple tabs active which definitely has impact on my device (Chrome tabs are memory killers 🔪). At the same there are momemts when I log on to youtube and then without even knowing just surfing videos one after other. To tackle such obstacles, I have developed **Tab Tracker** - A powerful browser extension that helps you understand and manage your browsing habits through intuitive visualizations and smart tab management features.
 
 ## Demo
-[![Watch how Tabs Tracker works](https://img.youtube.com/vi/lIHOE7plpD8/0.jpg)](https://www.youtube.com/watch?v=lIHOE7plpD8)
+[![Watch how Tabs Tracker works](https://img.youtube.com/vi/mH34iBd0zHw/0.jpg)](https://www.youtube.com/watch?v=mH34iBd0zHw)
 
 ## 🌟 Features
 
