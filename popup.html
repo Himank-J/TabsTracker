@@ -4,7 +4,9 @@
   <title>Tabs Tracker</title>
   <link rel="stylesheet" href="popup.css">
   <script src="lib/chart.js"></script>
+  <script src="lib/purify.min.js"></script>
   <script src="config.js"></script>
+  <script src="services/gemini.js"></script>
   <script src="popup.js"></script>
 </head>
 <body>
@@ -12,10 +14,21 @@
     <h1>Tabs Tracker</h1>
     
     <div class="tabs">
+      <button class="tab-button" data-tab="summary">Summary</button>
       <button class="tab-button active" data-tab="overview">Overview</button>
       <button class="tab-button" data-tab="groups">Tab Groups</button>
       <button class="tab-button" data-tab="inactive">Inactive Tabs</button>
       <button class="tab-button" data-tab="settings">Settings</button>
+    </div>
+
+    <div class="tab-content" id="summary">
+      <div class="summary-section">
+        <button id="summarizeBtn" class="primary-button">Summarize This Page</button>
+        <div id="summaryResult" class="summary-content">
+          <div class="loader" style="display: none;">Summarizing...</div>
+          <div class="summary-text"></div>
+        </div>
+      </div>
     </div>
 
     <div class="tab-content" id="overview">

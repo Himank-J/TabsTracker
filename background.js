@@ -1,11 +1,40 @@
 // Get settings from storage
 async function getSettings() {
   const { settings } = await chrome.storage.local.get(['settings']);
-  return settings || defaultSettings;
+  // If settings don't exist, initialize with default values
+  if (!settings) {
+    const defaultSettings = {
+      siteLimits: {
+        'www.youtube.com': 2,
+        'facebook.com': 30,
+        'twitter.com': 20
+      },
+      productiveSites: [
+        'github.com',
+        'stackoverflow.com',
+        'docs.google.com',
+        'linkedin.com'
+      ],
+      socialSites: [
+        'facebook.com',
+        'twitter.com',
+        'instagram.com',
+        'www.youtube.com'
+      ]
+    };
+    await chrome.storage.local.set({ settings: defaultSettings });
+    return defaultSettings;
+  }
+  return settings;
 }
 
 let tabData = {};
 let tabGroups = {};
+
+// Initialize settings when extension loads
+chrome.runtime.onInstalled.addListener(async () => {
+  await getSettings();
+});
 
 // Initialize tab tracking
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
@@ -188,9 +217,10 @@ chrome.tabs.query({}, (tabs) => {
 let notificationsSent = {};
 
 // Debug logging for time tracking
-setInterval(() => {
-  Object.entries(tabData).forEach(([tabId, data]) => {
-    if (siteLimits[data.domain]) {
+setInterval(async () => {
+  Object.entries(tabData).forEach(async ([tabId, data]) => {
+    const settings = await getSettings();
+    if (settings.siteLimits[data.domain]) {
       console.log(`${data.domain}: ${Math.floor(data.totalActiveTime / 60000)} minutes`);
     }
   });

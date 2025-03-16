@@ -173,4 +173,69 @@ h1 {
 
 .category-section h4 {
   margin-bottom: 8px;
+}
+
+.summary-section {
+  padding: 16px;
+}
+
+.primary-button {
+  background: #4285f4;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.primary-button:hover {
+  background: #3367d6;
+}
+
+.summary-content {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.loader {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+.summary-text {
+  white-space: pre-line;
+  padding: 10px;
+}
+
+.summary-text ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.summary-text li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.summary-text p {
+  margin: 8px 0;
+}
+
+.error-message {
+  color: #EA4335;
+  text-align: center;
+  padding: 10px;
+}
+
+.summary-text h1,
+.summary-text h2,
+.summary-text h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-size: 16px;
 } 

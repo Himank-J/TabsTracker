@@ -11,7 +11,9 @@
     "tabs",
     "storage",
     "alarms",
-    "windows"
+    "windows",
+    "activeTab",
+    "scripting"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -31,5 +33,13 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  }
+  },
+  "web_accessible_resources": [{
+    "resources": [
+      "services/gemini.js",
+      "config.js",
+      "lib/purify.min.js"
+    ],
+    "matches": ["<all_urls>"]
+  }]
 } 

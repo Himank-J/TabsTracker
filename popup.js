@@ -1,6 +1,19 @@
+let settings;
+
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load data from storage
-  const { tabData, tabGroups } = await chrome.storage.local.get(['tabData', 'tabGroups']);
+  // Ensure Chart.js is loaded
+  if (typeof Chart === 'undefined') {
+    console.error('Chart.js not loaded. Waiting...');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (typeof Chart === 'undefined') {
+      console.error('Chart.js failed to load');
+      return;
+    }
+  }
+
+  // Load data and settings from storage
+  const { tabData, tabGroups, settings: storedSettings } = await chrome.storage.local.get(['tabData', 'tabGroups', 'settings']);
+  settings = storedSettings || defaultSettings;
       
   // Debug logging
   console.log('Current tab data:', tabData);
@@ -16,11 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     button.addEventListener('click', () => switchTab(button.dataset.tab));
   });
 
-  // Show overview tab by default
-  document.getElementById('overview').style.display = 'block';
-  document.querySelector('[data-tab="overview"]').classList.add('active');
-  document.getElementById('groups').style.display = 'none';
-  document.getElementById('inactive').style.display = 'none';
+  // Show overview tab by default and hide others
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.style.display = content.id === 'overview' ? 'block' : 'none';
+  });
 
   // Initialize charts
   createTimeChart(initializedTabGroups);
@@ -74,10 +86,53 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('socialSite').value = '';
     }
   });
+
+  // Handle summarize button click
+  document.getElementById('summarizeBtn').addEventListener('click', async () => {
+    const summarySection = document.getElementById('summaryResult');
+    const loader = summarySection.querySelector('.loader');
+    const summaryText = summarySection.querySelector('.summary-text');
+    
+    loader.style.display = 'block';
+    summaryText.innerHTML = '';
+    
+    try {
+      // Get current tab
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      
+      // Inject content script if not already injected
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['scripts/content.js']
+        });
+      } catch (e) {
+        console.log('Content script already injected or failed to inject');
+      }
+      
+      // Get page content
+      const { content } = await chrome.tabs.sendMessage(tab.id, { action: 'getPageContent' });
+      
+      // Get summary from Gemini
+      if (typeof summarizeContent !== 'function') {
+        throw new Error('Summarize function not loaded');
+      }
+      const summary = await summarizeContent(content);
+      
+      // Display summary
+      const sanitizedHtml = DOMPurify.sanitize(summary);
+      summaryText.innerHTML = sanitizedHtml;
+    } catch (error) {
+      summaryText.innerHTML = '<p class="error-message">Failed to generate summary. Make sure you are on a webpage and try again.</p>';
+      console.error('Error:', error);
+    } finally {
+      loader.style.display = 'none';
+    }
+  });
 });
 
 function switchTab(tabId) {
-  // Hide all tab content
+  // Hide all tab content first
   document.querySelectorAll('.tab-content').forEach(content => {
     content.style.display = 'none';
   });
@@ -93,6 +148,11 @@ function switchTab(tabId) {
 }
 
 function createTimeChart(tabGroups) {
+  if (typeof Chart === 'undefined') {
+    console.error('Chart.js is not loaded');
+    return;
+  }
+
   if (Object.keys(tabGroups).length === 0) {
     // Handle empty data
     const ctx = document.getElementById('timeChart').getContext('2d');
@@ -105,27 +165,29 @@ function createTimeChart(tabGroups) {
 
   const ctx = document.getElementById('timeChart').getContext('2d');
   
-  const data = {
-    labels: Object.keys(tabGroups),
-    datasets: [{
-      data: Object.values(tabGroups).map(group => group.totalTime / 60000), // Convert to minutes
-      backgroundColor: generateColors(Object.keys(tabGroups).length)
-    }]
-  };
-
-  new Chart(ctx, {
-    type: 'pie',
-    data: data,
-    options: {
-      responsive: true,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Time Spent by Website'
+  try {
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(tabGroups),
+        datasets: [{
+          data: Object.values(tabGroups).map(group => group.totalTime / 60000),
+          backgroundColor: generateColors(Object.keys(tabGroups).length)
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Time Spent by Website'
+          }
         }
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error('Error creating chart:', error);
+  }
 }
 
 function displayTabGroups(tabGroups) {
