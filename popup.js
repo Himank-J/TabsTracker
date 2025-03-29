@@ -29,9 +29,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     button.addEventListener('click', () => switchTab(button.dataset.tab));
   });
 
-  // Show overview tab by default and hide others
-  document.querySelectorAll('.tab-content').forEach(content => {
-    content.style.display = content.id === 'overview' ? 'block' : 'none';
+  // Show overview tab by default
+  document.getElementById('overview').style.display = 'block';
+  
+  // Remove inline styles from other tabs
+  ['groups', 'inactive', 'settings'].forEach(tabId => {
+    const tab = document.getElementById(tabId);
+    if (tab) {
+      tab.removeAttribute('style');
+    }
   });
 
   // Initialize charts
@@ -127,6 +133,51 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Error:', error);
     } finally {
       loader.style.display = 'none';
+    }
+  });
+
+  // Populate domain dropdown
+  async function populateDomainDropdown() {
+    const tabs = await chrome.tabs.query({});
+    const domains = new Set();
+    
+    tabs.forEach(tab => {
+      try {
+        const url = new URL(tab.url);
+        if (url.protocol.startsWith('http')) {
+          domains.add(url.hostname);
+        }
+      } catch (e) {
+        // Skip invalid URLs
+      }
+    });
+    
+    const select = document.getElementById('domainSelect');
+    select.innerHTML = '<option value="">Select a domain...</option>';
+    
+    Array.from(domains).sort().forEach(domain => {
+      const option = document.createElement('option');
+      option.value = domain;
+      option.textContent = domain;
+      select.appendChild(option);
+    });
+  }
+
+  // Call it initially
+  populateDomainDropdown();
+
+  // Update dropdown when tabs change
+  chrome.tabs.onUpdated.addListener(populateDomainDropdown);
+  chrome.tabs.onRemoved.addListener(populateDomainDropdown);
+
+  // Initialize curation workflow
+  const curationService = new CurationService();
+  window.workflow = new CurationWorkflow(curationService);
+
+  document.getElementById('startCuration').addEventListener('click', () => {
+    const domain = document.getElementById('domainSelect').value;
+    if (domain) {
+      window.workflow.startWorkflow(domain);
     }
   });
 });

@@ -3,10 +3,14 @@
 <head>
   <title>Tabs Tracker</title>
   <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="styles/curation.css">
   <script src="lib/chart.js"></script>
   <script src="lib/purify.min.js"></script>
+  <script src="config/keys.js"></script>
   <script src="config.js"></script>
   <script src="services/gemini.js"></script>
+  <script src="services/curationService.js"></script>
+  <script src="components/curationWorkflow.js"></script>
   <script src="popup.js"></script>
 </head>
 <body>
@@ -14,11 +18,22 @@
     <h1>Tabs Tracker</h1>
     
     <div class="tabs">
+      <button class="tab-button" data-tab="curate">Curate</button>
       <button class="tab-button" data-tab="summary">Summary</button>
       <button class="tab-button active" data-tab="overview">Overview</button>
       <button class="tab-button" data-tab="groups">Tab Groups</button>
       <button class="tab-button" data-tab="inactive">Inactive Tabs</button>
       <button class="tab-button" data-tab="settings">Settings</button>
+    </div>
+
+    <div class="tab-content" id="curate">
+      <div class="curation-controls">
+        <select id="domainSelect" class="domain-select">
+          <option value="">Select a domain...</option>
+        </select>
+        <button id="startCuration" class="primary-button">Start Curation</button>
+      </div>
+      <div id="curationWorkflow"></div>
     </div>
 
     <div class="tab-content" id="summary">
@@ -40,15 +55,15 @@
       </div>
     </div>
 
-    <div class="tab-content" id="groups" style="display: none;">
+    <div class="tab-content" id="groups">
       <div id="tabGroups"></div>
     </div>
 
-    <div class="tab-content" id="inactive" style="display: none;">
+    <div class="tab-content" id="inactive">
       <div id="inactiveTabs"></div>
     </div>
 
-    <div class="tab-content" id="settings" style="display: none;">
+    <div class="tab-content" id="settings">
       <div class="settings-section">
         <h3>Time Limits</h3>
         <div class="add-limit">

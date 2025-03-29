@@ -36,9 +36,13 @@
   },
   "web_accessible_resources": [{
     "resources": [
+      "config/keys.js",
       "services/gemini.js",
       "config.js",
-      "lib/purify.min.js"
+      "lib/purify.min.js",
+      "services/curationService.js",
+      "components/curationWorkflow.js",
+      "styles/curation.css"
     ],
     "matches": ["<all_urls>"]
   }]

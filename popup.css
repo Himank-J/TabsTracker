@@ -17,6 +17,8 @@ h1 {
   display: flex;
   margin-bottom: 16px;
   border-bottom: 1px solid #ccc;
+  overflow-x: auto;
+  width: 100%;
 }
 
 .tab-button {
@@ -24,6 +26,8 @@ h1 {
   border: none;
   background: none;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .tab-button.active {
@@ -33,6 +37,7 @@ h1 {
 
 .tab-content {
   margin-top: 16px;
+  display: none;
 }
 
 .group-item {
@@ -238,4 +243,32 @@ h1 {
   margin-top: 16px;
   margin-bottom: 8px;
   font-size: 16px;
+}
+
+.domain-select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.domain-select:focus {
+  outline: none;
+  border-color: #4285f4;
+}
+
+#overview {
+  display: block;
+}
+
+/* Ensure Settings tab is visible */
+.tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabs::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
 } 
